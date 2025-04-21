@@ -2,8 +2,8 @@ let board = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "";
 let ai_Turn = false
 let gameOver = false;
-const MY_turn_name = "MY_turn"
-const AI_turn_name = "AI_turn"
+const MY_turn_name = "Your Turn"
+const AI_turn_name = "AI Turn"
 const statusDisplay = document.getElementById("status");
 const cells = document.querySelectorAll(".cell");
 
@@ -70,10 +70,7 @@ function ai_player() {
   cells[random].textContent = "O"
   let winner = checkWinner();
   if (winner) {
-    if (winner === "X") winner = "ME";
-    else winner = "AI";
-    statusDisplay.textContent = winner === "draw" ? "draw!" : `Winner: ${winner}`;
-    gameOver = true;
+    announceWinner(winner)
   } else {
     statusDisplay.textContent = MY_turn_name;
   }
@@ -81,8 +78,12 @@ function ai_player() {
   currentPlayer = "X"
 }
 function announceWinner(winner) {
-  let name = winner === "X" ? "ME" : "AI";
-  statusDisplay.textContent = winner === "draw" ? "draw!" : `Winner: ${name}`;
+  if (winner === "draw") {
+    statusDisplay.textContent = "draw!";
+  } else {
+    let name = winner === "X" ? "You" : "AI";
+    statusDisplay.textContent = `Winner: ${name}`;
+  }
   gameOver = true;
 }
 cells.forEach(cell => cell.addEventListener("click", handleClick));
