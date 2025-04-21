@@ -3,7 +3,7 @@ let currentPlayer = "";
 let ai_Turn = false
 let gameOver = false;
 const MY_turn_name = "Your Turn"
-const AI_turn_name = "AI Turn"
+const AI_turn_name = "AI's Turn"
 const statusDisplay = document.getElementById("status");
 const cells = document.querySelectorAll(".cell");
 
@@ -79,7 +79,7 @@ function ai_player() {
 }
 function announceWinner(winner) {
   if (winner === "draw") {
-    statusDisplay.textContent = "draw!";
+    statusDisplay.textContent = "Draw!";
   } else {
     let name = winner === "X" ? "You" : "AI";
     statusDisplay.textContent = `Winner: ${name}`;
