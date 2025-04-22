@@ -7,6 +7,11 @@
 </head>
 <body>
   <h1>Tic Tac Toe</h1>
+  <div id="scoreboard">
+    <p>You: <span id="you_record">0</span> 勝</p>
+    <p>AI: <span id="ai_record">0</span> 勝</p>
+  </div>
+  <button onclick="resetScore()">スコアリセット</button>
   <div class="board">
     <div class="cell" data-index="0"></div>
     <div class="cell" data-index="1"></div>
@@ -19,8 +24,7 @@
     <div class="cell" data-index="8"></div>
   </div>
   <p id="status">Your Turn</p>
-  <button onclick="resetGame()">リセット</button>
-
+  <button onclick="resetGame()">ゲームリセット</button>
   <script src="script.js"></script>
 </body>
 </html>
