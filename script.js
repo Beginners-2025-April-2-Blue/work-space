@@ -30,6 +30,7 @@ function handleClick(e) {
   let winner = checkWinner();
   if (winner) {
     announceWinner(winner)
+    record_save(winner)
   } else {
     //AIのターン
     currentPlayer = "O";
@@ -71,6 +72,7 @@ function ai_player() {
   let winner = checkWinner();
   if (winner) {
     announceWinner(winner)
+    record_save(winner)
   } else {
     statusDisplay.textContent = MY_turn_name;
   }
@@ -86,5 +88,32 @@ function announceWinner(winner) {
   }
   gameOver = true;
 }
+//現在の勝敗を表示
+function record_Initialize() {
+  const you_record = localStorage.getItem('y_record') || 0
+  const ai_record = localStorage.getItem('a_record') || 0
+  document.getElementById('you_record').textContent = you_record
+  document.getElementById('ai_record').textContent = ai_record
+
+}
+//勝敗を記録
+function record_save(winner) {
+  if(winner==="draw"){
+    return
+  }
+  const key = winner === "X" ? 'y_record' : 'a_record'
+  let current = parseInt(localStorage.getItem(key) || 0, 10)
+  current+= 1
+  localStorage.setItem(key, current)
+  winner === "X" ? document.getElementById('you_record').textContent = current : document.getElementById('ai_record').textContent = current
+}
+//勝敗をリセット
+function resetScore(){
+  localStorage.setItem('y_record', 0);
+  localStorage.setItem('a_record', 0);
+  record_Initialize();
+}
 cells.forEach(cell => cell.addEventListener("click", handleClick));
 resetGame();
+record_Initialize();
+
