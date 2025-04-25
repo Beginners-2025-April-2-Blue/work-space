@@ -11,7 +11,8 @@ const cells = document.querySelectorAll(".cell");
 
 //HTML側のマス目となる各div要素にクリックイベントの付与
 cells.forEach(cell => cell.addEventListener("click", handleClick));
-
+//画面更新時に勝敗を表示する関数を呼び出し
+reloadRecord();
 //ゲームを初期状態にセットするための関数呼び出し
 resetGame();
 
@@ -87,28 +88,28 @@ function ai_player() {
 
   // AIがリーチかどうかをチェックし、リーチなら勝ち手を打つ
   for (const [a, b, c] of [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-      [0, 4, 8], [2, 4, 6]             // diagonals
-  ]) {
-      const line = [board[a], board[b], board[c]];
-      const oCount = line.filter(cell => cell === "O").length;
-      const emptyIndex = line.indexOf("");
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+    [0, 4, 8], [2, 4, 6]             // diagonals
+]) {
+    const line = [board[a], board[b], board[c]];
+    const oCount = line.filter(cell => cell === "O").length;
+    const emptyIndex = line.indexOf("");
 
-      if (oCount === 2 && emptyIndex !== -1) {
-          const winningMoveIndex = [a, b, c][emptyIndex];
-          board[winningMoveIndex] = "O";
-          cells[winningMoveIndex].textContent = "O";
-          let winner = checkWinner();
-          if (winner) {
-              announceWinner(winner);
-              record_save(winner);
-              ai_Turn = false;
-              currentPlayer = "X";
-              return; // 勝ち手を打ったら関数を終了
-          }
-      }
-  }
+    if (oCount === 2 && emptyIndex !== -1) {
+        const winningMoveIndex = [a, b, c][emptyIndex];
+        board[winningMoveIndex] = "O";
+        cells[winningMoveIndex].textContent = "O";
+        let winner = checkWinner();
+        if (winner) {
+            announceWinner(winner);
+            record_save(winner);
+            ai_Turn = false;
+            currentPlayer = "X";
+            return; // 勝ち手を打ったら関数を終了
+        }
+    }
+}  
 
   // プレイヤーがリーチかどうかをチェックし、リーチなら防ぐ手を打つ
   for (const [a, b, c] of [
@@ -201,4 +202,19 @@ function announceWinner(winner) {
     statusDisplay.textContent = `Winner: ${name}`;
   }
   gameOver = true;
+}
+
+//画面更新時に勝敗を表示する関数
+function reloadRecord(){
+  const you=localStorage.getItem('y_record')||0;
+  const ai=localStorage.getItem('a_record')||0;
+  document.getElementById('you_record').textContent=you;
+  document.getElementById('ai_record').textContent=ai;
+}
+//勝敗記録をリセットする関数
+function resetScore(){
+  localStorage.setItem('y_record',0);
+  localStorage.setItem('a_record',0);
+  document.getElementById('you_record').textContent=0;
+  document.getElementById('ai_record').textContent=0;
 }
