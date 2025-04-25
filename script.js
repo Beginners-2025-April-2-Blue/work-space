@@ -85,6 +85,31 @@ function ai_player() {
       }
   }
 
+  // AIがリーチかどうかをチェックし、リーチなら勝ち手を打つ
+  for (const [a, b, c] of [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+      [0, 4, 8], [2, 4, 6]             // diagonals
+  ]) {
+      const line = [board[a], board[b], board[c]];
+      const oCount = line.filter(cell => cell === "O").length;
+      const emptyIndex = line.indexOf("");
+
+      if (oCount === 2 && emptyIndex !== -1) {
+          const winningMoveIndex = [a, b, c][emptyIndex];
+          board[winningMoveIndex] = "O";
+          cells[winningMoveIndex].textContent = "O";
+          let winner = checkWinner();
+          if (winner) {
+              announceWinner(winner);
+              record_save(winner);
+              ai_Turn = false;
+              currentPlayer = "X";
+              return; // 勝ち手を打ったら関数を終了
+          }
+      }
+  }
+
   // プレイヤーがリーチかどうかをチェックし、リーチなら防ぐ手を打つ
   for (const [a, b, c] of [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
@@ -114,30 +139,22 @@ function ai_player() {
     }
 }
 
-  // AIがリーチかどうかをチェックし、リーチなら勝ち手を打つ
-  for (const [a, b, c] of [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-      [0, 4, 8], [2, 4, 6]             // diagonals
-  ]) {
-      const line = [board[a], board[b], board[c]];
-      const oCount = line.filter(cell => cell === "O").length;
-      const emptyIndex = line.indexOf("");
-
-      if (oCount === 2 && emptyIndex !== -1) {
-          const winningMoveIndex = [a, b, c][emptyIndex];
-          board[winningMoveIndex] = "O";
-          cells[winningMoveIndex].textContent = "O";
-          let winner = checkWinner();
-          if (winner) {
-              announceWinner(winner);
-              record_save(winner);
-              ai_Turn = false;
-              currentPlayer = "X";
-              return; // 勝ち手を打ったら関数を終了
-          }
-      }
+// センター（4）を取るのは人間の勝利数が3回以上のときだけ
+const humanWins = parseInt(localStorage.getItem('y_record') || '0', 10);
+if (humanWins >= 3 && board[4] === "") {
+  board[4] = "O";
+  cells[4].textContent = "O";
+  let winner = checkWinner();
+  if (winner) {
+    announceWinner(winner);
+    record_save(winner);
+  } else {
+    statusDisplay.textContent = MY_turn_name;
   }
+  ai_Turn = false;
+  currentPlayer = "X";
+  return;
+}
 
   // 上記で勝ち手が見つからなかった場合は、ランダムに打つ
   const random = empty[Math.floor(Math.random() * empty.length)];
