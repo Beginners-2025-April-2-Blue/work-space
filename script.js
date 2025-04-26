@@ -11,7 +11,8 @@ const cells = document.querySelectorAll(".cell");
 
 //HTML側のマス目となる各div要素にクリックイベントの付与
 cells.forEach(cell => cell.addEventListener("click", handleClick));
-
+//画面更新時に勝敗を表示する関数を呼び出し
+reloadRecord();
 //ゲームを初期状態にセットするための関数呼び出し
 resetGame();
 
@@ -184,4 +185,19 @@ function announceWinner(winner) {
     statusDisplay.textContent = `Winner: ${name}`;
   }
   gameOver = true;
+}
+
+//画面更新時に勝敗を表示する関数
+function reloadRecord(){
+  const you=localStorage.getItem('y_record')||0;
+  const ai=localStorage.getItem('a_record')||0;
+  document.getElementById('you_record').textContent=you;
+  document.getElementById('ai_record').textContent=ai;
+}
+//勝敗記録をリセットする関数
+function resetScore(){
+  localStorage.setItem('y_record',0);
+  localStorage.setItem('a_record',0);
+  document.getElementById('you_record').textContent=0;
+  document.getElementById('ai_record').textContent=0;
 }
